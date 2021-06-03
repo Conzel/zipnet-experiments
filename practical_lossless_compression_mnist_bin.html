@@ -14256,13 +14256,13 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="Lossless-compression-with-VAEs">Lossless compression with VAEs<a class="anchor-link" href="#Lossless-compression-with-VAEs">&#182;</a></h1><p>In this notebook, we want to show some practical examples of lossless compression using neural nets, in particular VAEs in 
 combination with some techniques demonstrated at some recent ICLR papers.</p>
-<p>We will start off with a one-layer VAE in the spirit of <a href="https://arxiv.org/abs/1901.04866">https://arxiv.org/abs/1901.04866</a>.</p>
+<p>We will start off with a a simple VAE in the spirit of <a href="https://arxiv.org/abs/1901.04866">https://arxiv.org/abs/1901.04866</a>.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[205]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Modelling</span>
@@ -14298,22 +14298,22 @@ Image taken from <a href="https://towardsdatascience.com/understanding-variation
 <ul>
 <li>encoder: $p(z|x)$</li>
 <li>decoder: $p(x|z)$</li>
-<li>prior:   $p(z)$
-Where the prior is given implicitly through the loss function we use when training the VAE. Note that in this framework, we also have to let the decoding network output a probability distribution!</li>
+<li>prior:   $p(z)$</li>
 </ul>
+<p>Where the prior is given implicitly through the loss function we use when training the VAE. Note that in this framework, we also have to let the decoding network output a probability distribution!</p>
 <p>Using these probability distributions, we can employ a simple entropy coding scheme.</p>
 
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Buildding-a-VAE">Buildding a VAE<a class="anchor-link" href="#Buildding-a-VAE">&#182;</a></h2><p>Following <a href="https://towardsdatascience.com/6-different-ways-of-implementing-vae-with-tensorflow-2-and-tensorflow-probability-9fe34a8ab981">https://towardsdatascience.com/6-different-ways-of-implementing-vae-with-tensorflow-2-and-tensorflow-probability-9fe34a8ab981</a></p>
+<h2 id="Building-a-VAE">Building a VAE<a class="anchor-link" href="#Building-a-VAE">&#182;</a></h2><p>Following <a href="https://towardsdatascience.com/6-different-ways-of-implementing-vae-with-tensorflow-2-and-tensorflow-probability-9fe34a8ab981">https://towardsdatascience.com/6-different-ways-of-implementing-vae-with-tensorflow-2-and-tensorflow-probability-9fe34a8ab981</a></p>
 
 </div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Setting-up-model-architecture">Setting up model architecture<a class="anchor-link" href="#Setting-up-model-architecture">&#182;</a></h3><p>We use a simple, fully connected neural network, where we orient ourselves at the description for binarized MNIST in the paper by Townsend. Townsend used a FC-FF network with a hidden layer dimension of 100, and a latent dimension of 40.</p>
+<h3 id="Setting-up-model-architecture">Setting up model architecture<a class="anchor-link" href="#Setting-up-model-architecture">&#182;</a></h3><p>Townsend used a FC-FF network with a hidden layer dimension of 100, and a latent dimension of 40. For now, we use a simple ConvNet with a few layers, but this might change.</p>
 <p>For the latent variables, we have a normal distribution $p(z \mid x) = \mathcal{N}(\mu(x), \sigma(x))$, where $\mu, \sigma$ are functions parametrized by the encoder network.</p>
 <p>For the output variables, we have Bernoulli Distribution $p(x \mid z) = \text{Ber}(p)$. For regular MNIST, one could use a Beta-Binomial (generalization of a Beta distribution to discrete outputs).</p>
 
@@ -14321,7 +14321,7 @@ Where the prior is given implicitly through the loss function we use when traini
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[206]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># the negative of log-likelihood for probabilistic output</span>
@@ -14403,7 +14403,7 @@ Where the prior is given implicitly through the loss function we use when traini
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[207]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">datasets</span><span class="p">,</span> <span class="n">datasets_info</span> <span class="o">=</span> <span class="n">tfds</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mnist&#39;</span><span class="p">,</span>
@@ -14445,15 +14445,15 @@ Where the prior is given implicitly through the loss function we use when traini
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>WARNING:tensorflow:AutoGraph could not transform &lt;function _preprocess at 0x7f6632e205e0&gt; and will run it as-is.
+<pre>WARNING:tensorflow:AutoGraph could not transform &lt;function _preprocess at 0x7f65c3c29670&gt; and will run it as-is.
 Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
 Cause: module &#39;gast&#39; has no attribute &#39;Index&#39;
 To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
-WARNING:tensorflow:AutoGraph could not transform &lt;function _preprocess at 0x7f6632e205e0&gt; and will run it as-is.
+WARNING:tensorflow:AutoGraph could not transform &lt;function _preprocess at 0x7f65c3c29670&gt; and will run it as-is.
 Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
 Cause: module &#39;gast&#39; has no attribute &#39;Index&#39;
 To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
-WARNING: AutoGraph could not transform &lt;function _preprocess at 0x7f6632e205e0&gt; and will run it as-is.
+WARNING: AutoGraph could not transform &lt;function _preprocess at 0x7f65c3c29670&gt; and will run it as-is.
 Please report this to the TensorFlow team. When filing the bug, set the verbosity to 10 (on Linux, `export AUTOGRAPH_VERBOSITY=10`) and attach the full output.
 Cause: module &#39;gast&#39; has no attribute &#39;Index&#39;
 To silence this warning, decorate the function with @tf.autograph.experimental.do_not_convert
@@ -14468,7 +14468,7 @@ To silence this warning, decorate the function with @tf.autograph.experimental.d
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[208]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Hyperparams</span>
@@ -14507,7 +14507,7 @@ To silence this warning, decorate the function with @tf.autograph.experimental.d
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[209]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_sample_batch</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">))</span>
@@ -14522,7 +14522,7 @@ To silence this warning, decorate the function with @tf.autograph.experimental.d
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[210]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Let&#39;s see a reconstructed number</span>
@@ -14564,7 +14564,7 @@ To silence this warning, decorate the function with @tf.autograph.experimental.d
   <rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2021-06-03T16:45:56.492495</dc:date>
+    <dc:date>2021-06-03T18:27:29.053295</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -14595,9 +14595,9 @@ L 26.925 7.2
 z
 " style="fill:#ffffff;"/>
    </g>
-   <g clip-path="url(#pa480c12349)">
-    <image height="218" id="image25d32aaef6" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADGUlEQVR4nO3dUUrEQBBF0Yq4/y2PvwrKoDE3Sc85K/DnUpDHtNvMPAY41NvZfwC8AqFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQeD97D9gVY/H31/x27btH/8SrsBFg4DQICA0CAgNAkKDgNAgIDQI2NEuaM8GN2OHuyIXDQJCg4DQICA0CAgNAkKDgNAgsM3MvtGGX3u2k9nB1uOiQUBoEBAaBIQGAaFBQGgQEBoE/B7tguxs63HRICA0CAgNAkKDgNAgIDQICA0CdrQbsrPdj4sGAaFBQGgQEBoEhAYBoUHA5/0F+fx/PS4aBIQGAaFBQGgQEBoEhAYBoUHAjnaCZzvWsx2M+3HRICA0CAgNAkKDgNAgIDQICA0C28wYbRazZ4fzW7VjuGgQEBoEhAYBoUFAaBAQGgSEBgG/R+MLb0Iew0WDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAg4Lk5vtj7L6P8jOZ7LhoEhAYBoUFAaBAQGgSEBgGhQcBzc/wrz9V9z0WDgNAgIDQICA0CQoOA0CAgNAjY0RZky7oeFw0CQoOA0CAgNAgIDQJCg4DQIOBdxwXtfZvxLCvvey4aBIQGAaFBQGgQEBoEhAYBP5O5oLt+np9Z+xP9Hi4aBIQGAaFBQGgQEBoEhAYBoUHAjvZHZ25dtqr7cdEgIDQICA0CQoOA0CAgNAgIDQJ2tB8cuZPZwV6PiwYBoUFAaBAQGgSEBgGhQUBoEFh2Rzv7bURbGZ+5aBAQGgSEBgGhQUBoEBAaBIQGgWV3tKPZyfgNFw0CQoOA0CAgNAgIDQJCg8CtP+97Eo67cNEgIDQICA0CQoOA0CAgNAgIDQLbzJz7Lhu8ABcNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDwAc8FD3Kt9bg3AAAAABJRU5ErkJggg==" y="-6.64"/>
+   <g clip-path="url(#p94847963e5)">
+    <image height="218" id="image7f71f372bc" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADXklEQVR4nO3dQY7bMBAAQSnY/3/ZuedgAdGyKYpVL6BtNAbQgPJ5HMfnAIb6M/sAsAOhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQeBn9gFm+Xw+s48wzHmes4/AP0w0CAgNAkKDgNAgIDQICA0CQoPAeRzHKxdKb96TjWQHN4aJBgGhQUBoEBAaBIQGAaFBQGgQWPo+2p1d2cx90dW5r842c0d49+y7MtEgIDQICA0CQoOA0CAgNAhMvSYz8jH1zo+ZV70i9ObfzESDgNAgIDQICA0CQoOA0CAgNAgsfU3mzXuXb1bdkx3Hvr+ZiQYBoUFAaBAQGgSEBgGhQUBoEFh6jzbTk3dZI3dVT/7cT2aiQUBoEBAaBIQGAaFBQGgQEBoE7NEWtOudrpWZaBAQGgSEBgGhQUBoEBAaBKb+bdOVqysZdx5zj77usesj+Dvf65u/MxMNAkKDgNAgIDQICA0CQoOA0CAw9ZrMyF2W16KtZ+TedDYTDQJCg4DQICA0CAgNAkKDgNAgMHWPdncvMnJXtvLOZlVv/s5NNAgIDQJCg4DQICA0CAgNAkKDwKPf63jl2x7tzTuZle26+zTRICA0CAgNAkKDgNAgIDQICA0CU++j3fXkvQm/b+Xf20SDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgsPTr5nieka+Tu/LkazQmGgSEBgGhQUBoEBAaBIQGAaFBwB6N1K5/tWWiQUBoEBAaBIQGAaFBQGgQEBoE7NH4VSPvo628ZzPRICA0CAgNAkKDgNAgIDQICA0CP7MPwFrsyf6PiQYBoUFAaBAQGgSEBgGhQcDj/Qea+ddHjGGiQUBoEBAaBIQGAaFBQGgQEBoE7NEm2HlP9uarMN+YaBAQGgSEBgGhQUBoEBAaBIQGAX/b9ECj92y77rJmMtEgIDQICA0CQoOA0CAgNAgIDQL2aBAw0SAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQI/AV90Fy642zSmAAAAABJRU5ErkJggg==" y="-6.64"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
@@ -14605,10 +14605,10 @@ iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADGUlEQVR4nO3dUUrEQBBF0Yq4/y2PvwrK
       <defs>
        <path d="M 0 0 
 L 0 3.5 
-" id="m620298412a" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m3449f52828" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#m620298412a" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#m3449f52828" y="224.64"/>
       </g>
      </g>
      <g id="text_1">
@@ -14644,7 +14644,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#m620298412a" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#m3449f52828" y="224.64"/>
       </g>
      </g>
      <g id="text_2">
@@ -14683,7 +14683,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#m620298412a" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#m3449f52828" y="224.64"/>
       </g>
      </g>
      <g id="text_3">
@@ -14712,7 +14712,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#m620298412a" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#m3449f52828" y="224.64"/>
       </g>
      </g>
      <g id="text_4">
@@ -14726,7 +14726,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#m620298412a" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#m3449f52828" y="224.64"/>
       </g>
      </g>
      <g id="text_5">
@@ -14766,7 +14766,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#m620298412a" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#m3449f52828" y="224.64"/>
       </g>
      </g>
      <g id="text_6">
@@ -14784,10 +14784,10 @@ z
       <defs>
        <path d="M 0 0 
 L -3.5 0 
-" id="m083111f7cc" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m6cc5b8fb58" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m083111f7cc" y="11.082857"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m6cc5b8fb58" y="11.082857"/>
       </g>
      </g>
      <g id="text_7">
@@ -14800,7 +14800,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m083111f7cc" y="49.911429"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m6cc5b8fb58" y="49.911429"/>
       </g>
      </g>
      <g id="text_8">
@@ -14813,7 +14813,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m083111f7cc" y="88.74"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m6cc5b8fb58" y="88.74"/>
       </g>
      </g>
      <g id="text_9">
@@ -14827,7 +14827,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m083111f7cc" y="127.568571"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m6cc5b8fb58" y="127.568571"/>
       </g>
      </g>
      <g id="text_10">
@@ -14841,7 +14841,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_11">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m083111f7cc" y="166.397143"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m6cc5b8fb58" y="166.397143"/>
       </g>
      </g>
      <g id="text_11">
@@ -14855,7 +14855,7 @@ L -3.5 0
     <g id="ytick_6">
      <g id="line2d_12">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m083111f7cc" y="205.225714"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m6cc5b8fb58" y="205.225714"/>
       </g>
      </g>
      <g id="text_12">
@@ -14890,7 +14890,7 @@ L 244.365 7.2
   </g>
  </g>
  <defs>
-  <clipPath id="pa480c12349">
+  <clipPath id="p94847963e5">
    <rect height="217.44" width="217.44" x="26.925" y="7.2"/>
   </clipPath>
  </defs>
@@ -14917,7 +14917,7 @@ L 244.365 7.2
   <rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2021-06-03T16:45:56.887997</dc:date>
+    <dc:date>2021-06-03T18:27:29.298731</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -14948,9 +14948,9 @@ L 26.925 7.2
 z
 " style="fill:#ffffff;"/>
    </g>
-   <g clip-path="url(#p10053c7a02)">
-    <image height="218" id="image23e04cabdc" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADK0lEQVR4nO3dwYrCMBRA0Xbw/3/Z2epCC4bcaHvOXunm8qCPpPu2bfcNmOpv9QPAFQgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQK31Q9wVvf761v89n0Pn4RvYKJBQGgQEBoEhAYBoUFAaBAQGgT2zWebcu92bNtmz3ZGJhoEhAYBoUFAaBAQGgSEBgGhQcB5tA8d7cLgkYkGAaFBQGgQEBoEhAYBoUFAaBBwHm2SlXs259m+j4kGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBwHVzk7w7quKquusx0SAgNAgIDQJCg4DQICA0CAgNAq6b+0Kz92yuo+uZaBAQGgSEBgGhQUBoEBAaBIQGAXu0HzRzz2bHNoeJBgGhQUBoEBAaBIQGAaFBQGgQsEc7IXu272OiQUBoEBAaBIQGAaFBQGgQ8Hr/grz+75loEBAaBIQGAaFBQGgQEBoEhAYBezSe+GTUHCYaBIQGAaFBQGgQEBoEhAYBoUHgtvoB6L3blR3tuWbv2c7KRIOA0CAgNAgIDQJCg4DQICA0CNij8WR0T3bV82ZHTDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CPtu0wNFRlNEr30aOqsz87ysz0SAgNAgIDQJCg4DQICA0CAgNAvZoHxq5lm31p5HswnomGgSEBgGhQUBoEBAaBIQGAaFBwB7thdm7rBH2YL/HRIOA0CAgNAgIDQJCg4DQICA0CNxWP8A7I3cMju7BVp4Zsyc7HxMNAkKDgNAgIDQICA0CQoOA0CBw2vNoq8+T2YXxyESDgNAgIDQICA0CQoOA0CBw2tf7o0aO6Bz93qv/6zHRICA0CAgNAkKDgNAgIDQICA0C9mgQMNEgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQI/ANyTVqfkOgUNwAAAABJRU5ErkJggg==" y="-6.64"/>
+   <g clip-path="url(#p3d489b593b)">
+    <image height="218" id="image605926f2f0" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADb0lEQVR4nO3dUWrjMBRAUXvo/rec2cAQMxW6ku1zfkto2nB54IeU8ziOzwFM9Wf1G4A3EBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEfla/gVk+n8/Xn5/nOfT6EaO/++r17MdEg4DQICA0CAgNAkKDgNAgIDQInMdxzFsYLTRzD7a7kT2dHd0cJhoEhAYBoUFAaBAQGgSEBgGhQWDr82g778Jm7qpG/+6V/zdn6f7NRIOA0CAgNAgIDQJCg4DQILD0mMzKK93u7M5rj7cy0SAgNAgIDQJCg4DQICA0CAgNArfeo9nZ/M7KPdxbPzMTDQJCg4DQICA0CAgNAkKDgNAgsPS6udnXrr2V/9t+TDQICA0CQoOA0CAgNAgIDQJCg8DU82grv8Lnzl8fNPreR17vrNocJhoEhAYBoUFAaBAQGgSEBoGl181d2flrne68Phix82eyMxMNAkKDgNAgIDQICA0CQoOA0CCw9Lq5KyN7ldF9z1v3ZFdcEfg7JhoEhAYBoUFAaBAQGgSEBgGhQWDrPdqVbzubmVeywf8y0SAgNAgIDQJCg4DQICA0CAgNAlvf6zjCnmxPI+fV7vyZmWgQEBoEhAYBoUFAaBAQGgSEBoFbn0f75s47F57HRIOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CDw2GMyPM+drxA00SAgNAgIDQJCg4DQICA0CAgNAvZo3MbOe7IrJhoEhAYBoUFAaBAQGgSEBgGhQcAejcfY+byaiQYBoUFAaBAQGgSEBgGhQUBoELBHe6CRfdLoLurq9TPtfF7NRIOA0CAgNAgIDQJCg4DQIHAex7HueeyDfXvMPfqIfOdH7Fd2fgQ/k4kGAaFBQGgQEBoEhAYBoUFAaBCwR7uhnfdkV+zRgGmEBgGhQUBoEBAaBIQGAaFBwB5tkpFd1+iuaebv3vmrkXZmokFAaBAQGgSEBgGhQUBoEBAaBOzRIGCiQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBD4C72tjbDYW9zdAAAAAElFTkSuQmCC" y="-6.64"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
@@ -14958,10 +14958,10 @@ iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADK0lEQVR4nO3dwYrCMBRA0Xbw/3/Z2epC
       <defs>
        <path d="M 0 0 
 L 0 3.5 
-" id="mcda64a5696" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m399b776ebd" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#mcda64a5696" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#m399b776ebd" y="224.64"/>
       </g>
      </g>
      <g id="text_1">
@@ -14997,7 +14997,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#mcda64a5696" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#m399b776ebd" y="224.64"/>
       </g>
      </g>
      <g id="text_2">
@@ -15036,7 +15036,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#mcda64a5696" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#m399b776ebd" y="224.64"/>
       </g>
      </g>
      <g id="text_3">
@@ -15065,7 +15065,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#mcda64a5696" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#m399b776ebd" y="224.64"/>
       </g>
      </g>
      <g id="text_4">
@@ -15079,7 +15079,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#mcda64a5696" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#m399b776ebd" y="224.64"/>
       </g>
      </g>
      <g id="text_5">
@@ -15119,7 +15119,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#mcda64a5696" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#m399b776ebd" y="224.64"/>
       </g>
      </g>
      <g id="text_6">
@@ -15137,10 +15137,10 @@ z
       <defs>
        <path d="M 0 0 
 L -3.5 0 
-" id="mf54bfe7799" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m7e8e3b020c" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf54bfe7799" y="11.082857"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m7e8e3b020c" y="11.082857"/>
       </g>
      </g>
      <g id="text_7">
@@ -15153,7 +15153,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf54bfe7799" y="49.911429"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m7e8e3b020c" y="49.911429"/>
       </g>
      </g>
      <g id="text_8">
@@ -15166,7 +15166,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf54bfe7799" y="88.74"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m7e8e3b020c" y="88.74"/>
       </g>
      </g>
      <g id="text_9">
@@ -15180,7 +15180,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf54bfe7799" y="127.568571"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m7e8e3b020c" y="127.568571"/>
       </g>
      </g>
      <g id="text_10">
@@ -15194,7 +15194,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_11">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf54bfe7799" y="166.397143"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m7e8e3b020c" y="166.397143"/>
       </g>
      </g>
      <g id="text_11">
@@ -15208,7 +15208,7 @@ L -3.5 0
     <g id="ytick_6">
      <g id="line2d_12">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf54bfe7799" y="205.225714"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m7e8e3b020c" y="205.225714"/>
       </g>
      </g>
      <g id="text_12">
@@ -15243,7 +15243,7 @@ L 244.365 7.2
   </g>
  </g>
  <defs>
-  <clipPath id="p10053c7a02">
+  <clipPath id="p3d489b593b">
    <rect height="217.44" width="217.44" x="26.925" y="7.2"/>
   </clipPath>
  </defs>
@@ -15260,7 +15260,7 @@ L 244.365 7.2
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[211]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plotting a sample from the latent space</span>
@@ -15297,7 +15297,7 @@ L 244.365 7.2
   <rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2021-06-03T16:45:57.399733</dc:date>
+    <dc:date>2021-06-03T18:27:29.879058</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -15328,9 +15328,9 @@ L 26.925 7.2
 z
 " style="fill:#ffffff;"/>
    </g>
-   <g clip-path="url(#p9806649a72)">
-    <image height="218" id="image87afd9c8e5" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAAIPUlEQVR4nO3d32vOfxzG8fd+3O5tNEzCNhthB1JTjOZH7cCB4siBOKT8KH+AUpID5w6c+AfkRHHqQE2JKDHWzEJbfiTMxjZ0b/P9C97Xq6zvtd27n4/Tqze7l8un7lev96cqpfQ3AfhfVc/3DwBUAooGGFA0wICiAQYUDTCgaIABRQMMKBpgQNEAA4oGGFA0wICiAQYUDTCgaIABRQMMKBpgQNEAA4oGGFA0wICiAQYUDTCgaIBB7Xz/AP+XqqoqmRcKBZkXi0WZ19TUyHxiYiKbzczMyLN//3ID4GLDEw0woGiAAUUDDCgaYEDRAAOKBhhQNMCgrOdoahbW09Mjz168eFHm69evl/nHjx9lfv/+/X/KUkrpyZMnMv/+/bvMZ2dnZc6czo8nGmBA0QADigYYUDTAgKIBBhQNMKBogEFZz9GWLl2azU6dOiXP7tq1S+a1tfpXs3r16n/OoxldlA8MDMh8eHhY5uPj49lscnJSnp3rjK5SZ3g80QADigYYUDTAgKIBBhQNMKBogAFFAwzKeo6mZjJNTU3ybHTvY3W1/j+orq5O5i0tLdlsz5498mxra6vMf/78KfO3b9/KvK+vL5u9fPlSnh0aGpL51NSUzP/8+ZPNFvOMjScaYEDRAAOKBhhQNMCAogEGFA0woGiAQVVKqWyHF+odZceOHZNnr127JvPGxkaZR3M4tbelZkkp6X2xlFKanp6WeeTbt2/ZrL+/X569efOmzOdyJ2X03rhyvq+SJxpgQNEAA4oGGFA0wICiAQYUDTAo6zUZ9XXwnTt35Nndu3fL/MSJEzJXV92lpNdsohWbaEVnbGxM5tHX/8ViMZs1NzfLs+3t7TIfHR2VuboKLzobjUX4eh+ocBQNMKBogAFFAwwoGmBA0QADigYYlPUcTZmYmJD5pUuXZF4oFGQezdmWLFmSzaI5mZpzpRSv8AwODspcrbJE181Ff3a0yrJ8+fJsFs0Ho9WkhYwnGmBA0QADigYYUDTAgKIBBhQNMKBogMGinaNFopnNhQsXZF4qlWR+8uTJbNbQ0CDPRvOi+vp6mXd0dMj869ev2Syak0Wiz6Z25aLPFe2jRb+3+dxX44kGGFA0wICiAQYUDTCgaIABRQMMKBpgULFztGimEs3ZLl++LPORkZFsFu3CRXdGznXO1t3dnc2iXbfoZ/vw4YPMP3/+nM3ev38vzy7kOVmEJxpgQNEAA4oGGFA0wICiAQYUDTCo2K/3I3P9+v/GjRvZbMWKFfLs8ePHZd7W1ibzmpoamatVls7OTnk2Gh08e/ZM5r29vdksep1V9Lmi1aX5xBMNMKBogAFFAwwoGmBA0QADigYYUDTAgDlaRrSSEeXq9UXqtUkpxesip0+flvnWrVtlrl4ppbKUUtq8ebPMo1mXmrP9+vVLnlVX1S10PNEAA4oGGFA0wICiAQYUDTCgaIABRQMMKnaOFs3BCoWCzFeuXCnzDRs2ZDN15VpK8U7Xq1evZH7mzBmZHzlyJJtFnzuaszU3N8u8paUlm5XzdXIRnmiAAUUDDCgaYEDRAAOKBhhQNMCAogEGFTtHW7ZsmcwPHjwo8/3798t8dHQ0mz148ECeHR4elvnr169lfvXqVZm3t7dns507d8qztbX6n0z0Wqdt27Zls2iGxxwNgETRAAOKBhhQNMCAogEGFA0woGiAwaKdo0Xznq6uLpmfPXtW5lu2bJH5p0+fslm0jzY0NCTzHz9+yHxwcFDmV65cyWbXr1+XZ9euXSvz6mr9f7ea4UV3QjJHAyBRNMCAogEGFA0woGiAAUUDDMr66311PVm0cqGug0sppU2bNsm8qalJ5uoVRNGKTkNDg8zHx8dl/vv3b5k/ffo0mz169EiePXTokMyj3/u6deuymbqKLqWURkZGZL6Qv/7niQYYUDTAgKIBBhQNMKBogAFFAwwoGmBQ1nM0NTeZmZmRZ9UaS0oplUolmUdrOOr1RYcPH5Zn37x5I/OxsTGZRz/77OxsNuvt7ZVnDxw4IPO5vPYpWj16/PixzNXnmm880QADigYYUDTAgKIBBhQNMKBogAFFAwzKeo6mRHO0gYEBmT98+FDma9askXmxWMxm0auRzp07J/NoVtXf3y/zxsbGbBZd+ab27FKKX9ukdgjb2trk2ehni+aH84knGmBA0QADigYYUDTAgKIBBhQNMKBogMGinaNFu0lfvnyR+e3bt2Uevb6os7Mzm0X3OnZ3d8t8+/btMn/37p3MX7x4kc2i1y5NTU3JPJpfqnxyclKejeZoCxlPNMCAogEGFA0woGiAAUUDDCgaYEDRAINFO0eL3pUV7VXdu3dP5tHMp6OjI5t1dXXJsz09PTJftWrVP//dKel3lEVzsmgXbnp6WubqTsrors2FfG9jhCcaYEDRAAOKBhhQNMCAogEGFA0wqEop6e/BK5S6Fi2leJ2krq4um0VrMnv37pX50aNHZd7a2ipztaqirqJLKV4PUp87pZT6+vqy2fnz5+XZ58+fyzwa2cwnnmiAAUUDDCgaYEDRAAOKBhhQNMCAogEGzNHmQTSjq63V20vRHK6+vl7mGzduzGY7duyQZ/ft2yfzaE3m1q1b2ezu3bvybLSatJDXaHiiAQYUDTCgaIABRQMMKBpgQNEAA4oGGDBHq0BqjhfN+IrFosxLpZLMoznbYsUTDTCgaIABRQMMKBpgQNEAA4oGGFA0wIA5GmDAEw0woGiAAUUDDCgaYEDRAAOKBhhQNMCAogEGFA0woGiAAUUDDCgaYEDRAAOKBhhQNMCAogEGFA0woGiAAUUDDCgaYEDRAAOKBhj8B4r33PxTY3hKAAAAAElFTkSuQmCC" y="-6.64"/>
+   <g clip-path="url(#p4165e703bc)">
+    <image height="218" id="imagefdb6ec8aa2" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
+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" y="-6.64"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
@@ -15338,10 +15338,10 @@ iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAAIPUlEQVR4nO3d32vOfxzG8fd+3O5tNEzC
       <defs>
        <path d="M 0 0 
 L 0 3.5 
-" id="m1b3e8abb4f" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m3f407ae20d" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#m1b3e8abb4f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#m3f407ae20d" y="224.64"/>
       </g>
      </g>
      <g id="text_1">
@@ -15377,7 +15377,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#m1b3e8abb4f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#m3f407ae20d" y="224.64"/>
       </g>
      </g>
      <g id="text_2">
@@ -15416,7 +15416,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#m1b3e8abb4f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#m3f407ae20d" y="224.64"/>
       </g>
      </g>
      <g id="text_3">
@@ -15445,7 +15445,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#m1b3e8abb4f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#m3f407ae20d" y="224.64"/>
       </g>
      </g>
      <g id="text_4">
@@ -15459,7 +15459,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#m1b3e8abb4f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#m3f407ae20d" y="224.64"/>
       </g>
      </g>
      <g id="text_5">
@@ -15499,7 +15499,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#m1b3e8abb4f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#m3f407ae20d" y="224.64"/>
       </g>
      </g>
      <g id="text_6">
@@ -15517,10 +15517,10 @@ z
       <defs>
        <path d="M 0 0 
 L -3.5 0 
-" id="mf62b2c0378" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m5677948c3e" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf62b2c0378" y="11.082857"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m5677948c3e" y="11.082857"/>
       </g>
      </g>
      <g id="text_7">
@@ -15533,7 +15533,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf62b2c0378" y="49.911429"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m5677948c3e" y="49.911429"/>
       </g>
      </g>
      <g id="text_8">
@@ -15546,7 +15546,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf62b2c0378" y="88.74"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m5677948c3e" y="88.74"/>
       </g>
      </g>
      <g id="text_9">
@@ -15560,7 +15560,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf62b2c0378" y="127.568571"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m5677948c3e" y="127.568571"/>
       </g>
      </g>
      <g id="text_10">
@@ -15574,7 +15574,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_11">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf62b2c0378" y="166.397143"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m5677948c3e" y="166.397143"/>
       </g>
      </g>
      <g id="text_11">
@@ -15588,7 +15588,7 @@ L -3.5 0
     <g id="ytick_6">
      <g id="line2d_12">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#mf62b2c0378" y="205.225714"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m5677948c3e" y="205.225714"/>
       </g>
      </g>
      <g id="text_12">
@@ -15623,7 +15623,7 @@ L 244.365 7.2
   </g>
  </g>
  <defs>
-  <clipPath id="p9806649a72">
+  <clipPath id="p4165e703bc">
    <rect height="217.44" width="217.44" x="26.925" y="7.2"/>
   </clipPath>
  </defs>
@@ -15646,7 +15646,7 @@ L 244.365 7.2
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[48]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[212]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">DiscretizedRV</span><span class="p">():</span>
@@ -15724,7 +15724,7 @@ L 244.365 7.2
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[49]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[213]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">xtilde</span><span class="o">.</span><span class="n">log_prob</span><span class="p">(</span><span class="n">x_sample_batch</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">10</span><span class="p">])</span>
@@ -15743,15 +15743,15 @@ L 244.365 7.2
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[49]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[213]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
 <pre>&lt;tf.Tensor: shape=(10,), dtype=float32, numpy=
-array([-339.45044, -192.47545, -312.13647, -366.28107, -271.27493,
-       -259.05087, -376.12195, -469.6767 , -841.4579 , -343.11615],
+array([-449.33475, -415.3261 , -844.10266, -445.00043, -264.272  ,
+       -445.12604, -972.41455, -335.30496, -624.8286 , -582.60297],
       dtype=float32)&gt;</pre>
 </div>
 
@@ -15777,10 +15777,10 @@ p(z\mid x) = \prod_i p(z_i \mid x)
 \end{equation*}<p>Which also allows us to push the z independently on the encoder stack.</p>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell    celltag_outputPrepend">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[202]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[214]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_pixel_probs</span><span class="p">(</span><span class="n">bernoulli_layer</span><span class="p">):</span>
@@ -15799,7 +15799,7 @@ p(z\mid x) = \prod_i p(z_i \mid x)
 <span class="n">z_bins</span> <span class="o">=</span> <span class="n">Z_disc</span><span class="o">.</span><span class="n">bins</span><span class="p">()</span>
 <span class="n">z_sample_disc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">Z_disc</span><span class="o">.</span><span class="n">discretize</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">z_sample</span><span class="p">,</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">1</span><span class="p">))),</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 <span class="n">coder</span><span class="o">.</span><span class="n">encode_iid_categorical_symbols_reverse</span><span class="p">(</span><span class="n">z_sample_disc</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">z_bins</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;length of compressed z (prior) </span><span class="si">{</span><span class="n">coder</span><span class="o">.</span><span class="n">get_compressed</span><span class="p">()</span> <span class="o">*</span> <span class="mi">32</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;length of compressed z (prior) </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">coder</span><span class="o">.</span><span class="n">get_compressed</span><span class="p">())</span> <span class="o">*</span> <span class="mi">32</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Showing how to decode z on the stack</span>
 <span class="n">z_sample_disc_dec</span> <span class="o">=</span> <span class="n">coder</span><span class="o">.</span><span class="n">decode_iid_categorical_symbols</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">z_bins</span><span class="p">)</span>
@@ -15814,7 +15814,7 @@ p(z\mid x) = \prod_i p(z_i \mid x)
     <span class="n">p</span> <span class="o">=</span> <span class="n">x_hat_probs_flat</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
     <span class="n">coder</span><span class="o">.</span><span class="n">encode_iid_categorical_symbols_reverse</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">]))</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;length of compressed x | z </span><span class="si">{</span><span class="n">coder</span><span class="o">.</span><span class="n">get_compressed</span><span class="p">()</span> <span class="o">*</span> <span class="mi">32</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;length of compressed x | z </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">coder</span><span class="o">.</span><span class="n">get_compressed</span><span class="p">())</span> <span class="o">*</span> <span class="mi">32</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="c1"># Decoding x | z</span>
 <span class="n">x_dec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="p">)</span>
@@ -15850,325 +15850,8 @@ p(z\mid x) = \prod_i p(z_i \mid x)
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136199132
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136236517
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136273902
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136311287
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136348672
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136386057
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136423442
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136460827
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136498212
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136535597
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136572982
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136610367
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136647752
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136685137
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136722522
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136759907
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136797292
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136834677
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136872062
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136909447
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136946832
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  136984217
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  137021602
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  137058987
-        146]
-[1476395007  251658239   33666562 4195582491  201326591 4294967295
- 4294967295 4294967295   16777216 2449473536  181806709 4294967295
- 4294967295 4294967295  117440512  603979776  189019772 4294967295
- 3658746002   33554432          0 1718409135  251658240   67108864
- 2449473536  239232196          0          0          0 1913462387
-  503316480  218103808 2097152000 1107296256  474113571 1621826760
- 2952790016  218103808 2097152000 1107296256  273158208 1996488704
- 1108951451  423910263          0 2960698160  218103808          0
- 2960698160  218103808 2109300850 1107296256  483689536 1728053247
- 3003121663  167772159 4294967295 3054633838   16777216          0
- 4233378800  134217727 4294967295 4294967295 4294967295  520093696
- 1752199712  201326591 4294967295 4294967295 4294967295  137096372
-        146]
+<pre>length of compressed z (prior) 640
+length of compressed x | z 3200
 </pre>
 </div>
 </div>
@@ -16190,7 +15873,7 @@ p(z\mid x) = \prod_i p(z_i \mid x)
   <rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2021-06-03T17:57:29.287366</dc:date>
+    <dc:date>2021-06-03T18:27:30.669209</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -16221,9 +15904,9 @@ L 26.925 7.2
 z
 " style="fill:#ffffff;"/>
    </g>
-   <g clip-path="url(#p60a1f48590)">
-    <image height="218" id="image83b215f2b4" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADGUlEQVR4nO3dUUrEQBBF0Yq4/y2PvwrKoDE3Sc85K/DnUpDHtNvMPAY41NvZfwC8AqFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQeD97D9gVY/H31/x27btH/8SrsBFg4DQICA0CAgNAkKDgNAgIDQI2NEuaM8GN2OHuyIXDQJCg4DQICA0CAgNAkKDgNAgsM3MvtGGX3u2k9nB1uOiQUBoEBAaBIQGAaFBQGgQEBoE/B7tguxs63HRICA0CAgNAkKDgNAgIDQICA0CdrQbsrPdj4sGAaFBQGgQEBoEhAYBoUHA5/0F+fx/PS4aBIQGAaFBQGgQEBoEhAYBoUHAjnaCZzvWsx2M+3HRICA0CAgNAkKDgNAgIDQICA0C28wYbRazZ4fzW7VjuGgQEBoEhAYBoUFAaBAQGgSEBgG/R+MLb0Iew0WDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAg4Lk5vtj7L6P8jOZ7LhoEhAYBoUFAaBAQGgSEBgGhQcBzc/wrz9V9z0WDgNAgIDQICA0CQoOA0CAgNAjY0RZky7oeFw0CQoOA0CAgNAgIDQJCg4DQIOBdxwXtfZvxLCvvey4aBIQGAaFBQGgQEBoEhAYBP5O5oLt+np9Z+xP9Hi4aBIQGAaFBQGgQEBoEhAYBoUHAjvZHZ25dtqr7cdEgIDQICA0CQoOA0CAgNAgIDQJ2tB8cuZPZwV6PiwYBoUFAaBAQGgSEBgGhQUBoEFh2Rzv7bURbGZ+5aBAQGgSEBgGhQUBoEBAaBIQGgWV3tKPZyfgNFw0CQoOA0CAgNAgIDQJCg8CtP+97Eo67cNEgIDQICA0CQoOA0CAgNAgIDQLbzJz7Lhu8ABcNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDwAc8FD3Kt9bg3AAAAABJRU5ErkJggg==" y="-6.64"/>
+   <g clip-path="url(#pe84720b17e)">
+    <image height="218" id="image79ca2df5c2" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADXklEQVR4nO3dQY7bMBAAQSnY/3/ZuedgAdGyKYpVL6BtNAbQgPJ5HMfnAIb6M/sAsAOhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQeBn9gFm+Xw+s48wzHmes4/AP0w0CAgNAkKDgNAgIDQICA0CQoPAeRzHKxdKb96TjWQHN4aJBgGhQUBoEBAaBIQGAaFBQGgQWPo+2p1d2cx90dW5r842c0d49+y7MtEgIDQICA0CQoOA0CAgNAhMvSYz8jH1zo+ZV70i9ObfzESDgNAgIDQICA0CQoOA0CAgNAgsfU3mzXuXb1bdkx3Hvr+ZiQYBoUFAaBAQGgSEBgGhQUBoEFh6jzbTk3dZI3dVT/7cT2aiQUBoEBAaBIQGAaFBQGgQEBoE7NEWtOudrpWZaBAQGgSEBgGhQUBoEBAaBKb+bdOVqysZdx5zj77usesj+Dvf65u/MxMNAkKDgNAgIDQICA0CQoOA0CAw9ZrMyF2W16KtZ+TedDYTDQJCg4DQICA0CAgNAkKDgNAgMHWPdncvMnJXtvLOZlVv/s5NNAgIDQJCg4DQICA0CAgNAkKDwKPf63jl2x7tzTuZle26+zTRICA0CAgNAkKDgNAgIDQICA0CU++j3fXkvQm/b+Xf20SDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgsPTr5nieka+Tu/LkazQmGgSEBgGhQUBoEBAaBIQGAaFBwB6N1K5/tWWiQUBoEBAaBIQGAaFBQGgQEBoE7NH4VSPvo628ZzPRICA0CAgNAkKDgNAgIDQICA0CP7MPwFrsyf6PiQYBoUFAaBAQGgSEBgGhQcDj/Qea+ddHjGGiQUBoEBAaBIQGAaFBQGgQEBoE7NEm2HlP9uarMN+YaBAQGgSEBgGhQUBoEBAaBIQGAX/b9ECj92y77rJmMtEgIDQICA0CQoOA0CAgNAgIDQL2aBAw0SAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQI/AV90Fy642zSmAAAAABJRU5ErkJggg==" y="-6.64"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
@@ -16231,10 +15914,10 @@ iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADGUlEQVR4nO3dUUrEQBBF0Yq4/y2PvwrK
       <defs>
        <path d="M 0 0 
 L 0 3.5 
-" id="m252a1bb38f" style="stroke:#000000;stroke-width:0.8;"/>
+" id="me68ed19f9d" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#m252a1bb38f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#me68ed19f9d" y="224.64"/>
       </g>
      </g>
      <g id="text_1">
@@ -16270,7 +15953,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#m252a1bb38f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#me68ed19f9d" y="224.64"/>
       </g>
      </g>
      <g id="text_2">
@@ -16309,7 +15992,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#m252a1bb38f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#me68ed19f9d" y="224.64"/>
       </g>
      </g>
      <g id="text_3">
@@ -16338,7 +16021,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#m252a1bb38f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#me68ed19f9d" y="224.64"/>
       </g>
      </g>
      <g id="text_4">
@@ -16352,7 +16035,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#m252a1bb38f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#me68ed19f9d" y="224.64"/>
       </g>
      </g>
      <g id="text_5">
@@ -16392,7 +16075,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#m252a1bb38f" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#me68ed19f9d" y="224.64"/>
       </g>
      </g>
      <g id="text_6">
@@ -16410,10 +16093,10 @@ z
       <defs>
        <path d="M 0 0 
 L -3.5 0 
-" id="m079aef975e" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m581579cee3" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m079aef975e" y="11.082857"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m581579cee3" y="11.082857"/>
       </g>
      </g>
      <g id="text_7">
@@ -16426,7 +16109,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m079aef975e" y="49.911429"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m581579cee3" y="49.911429"/>
       </g>
      </g>
      <g id="text_8">
@@ -16439,7 +16122,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m079aef975e" y="88.74"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m581579cee3" y="88.74"/>
       </g>
      </g>
      <g id="text_9">
@@ -16453,7 +16136,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m079aef975e" y="127.568571"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m581579cee3" y="127.568571"/>
       </g>
      </g>
      <g id="text_10">
@@ -16467,7 +16150,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_11">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m079aef975e" y="166.397143"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m581579cee3" y="166.397143"/>
       </g>
      </g>
      <g id="text_11">
@@ -16481,7 +16164,7 @@ L -3.5 0
     <g id="ytick_6">
      <g id="line2d_12">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m079aef975e" y="205.225714"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m581579cee3" y="205.225714"/>
       </g>
      </g>
      <g id="text_12">
@@ -16516,7 +16199,7 @@ L 244.365 7.2
   </g>
  </g>
  <defs>
-  <clipPath id="p60a1f48590">
+  <clipPath id="pe84720b17e">
    <rect height="217.44" width="217.44" x="26.925" y="7.2"/>
   </clipPath>
  </defs>
@@ -16543,7 +16226,7 @@ L 244.365 7.2
   <rdf:RDF xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2021-06-03T17:57:29.487696</dc:date>
+    <dc:date>2021-06-03T18:27:30.881378</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -16574,9 +16257,9 @@ L 26.925 7.2
 z
 " style="fill:#ffffff;"/>
    </g>
-   <g clip-path="url(#pb9662d71c1)">
-    <image height="218" id="imagea9ee723594" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
-iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADGUlEQVR4nO3dUUrEQBBF0Yq4/y2PvwrKoDE3Sc85K/DnUpDHtNvMPAY41NvZfwC8AqFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQeD97D9gVY/H31/x27btH/8SrsBFg4DQICA0CAgNAkKDgNAgIDQI2NEuaM8GN2OHuyIXDQJCg4DQICA0CAgNAkKDgNAgsM3MvtGGX3u2k9nB1uOiQUBoEBAaBIQGAaFBQGgQEBoE/B7tguxs63HRICA0CAgNAkKDgNAgIDQICA0CdrQbsrPdj4sGAaFBQGgQEBoEhAYBoUHA5/0F+fx/PS4aBIQGAaFBQGgQEBoEhAYBoUHAjnaCZzvWsx2M+3HRICA0CAgNAkKDgNAgIDQICA0C28wYbRazZ4fzW7VjuGgQEBoEhAYBoUFAaBAQGgSEBgG/R+MLb0Iew0WDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAg4Lk5vtj7L6P8jOZ7LhoEhAYBoUFAaBAQGgSEBgGhQcBzc/wrz9V9z0WDgNAgIDQICA0CQoOA0CAgNAjY0RZky7oeFw0CQoOA0CAgNAgIDQJCg4DQIOBdxwXtfZvxLCvvey4aBIQGAaFBQGgQEBoEhAYBP5O5oLt+np9Z+xP9Hi4aBIQGAaFBQGgQEBoEhAYBoUHAjvZHZ25dtqr7cdEgIDQICA0CQoOA0CAgNAgIDQJ2tB8cuZPZwV6PiwYBoUFAaBAQGgSEBgGhQUBoEFh2Rzv7bURbGZ+5aBAQGgSEBgGhQUBoEBAaBIQGgWV3tKPZyfgNFw0CQoOA0CAgNAgIDQJCg8CtP+97Eo67cNEgIDQICA0CQoOA0CAgNAgIDQLbzJz7Lhu8ABcNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDwAc8FD3Kt9bg3AAAAABJRU5ErkJggg==" y="-6.64"/>
+   <g clip-path="url(#pa219f11195)">
+    <image height="218" id="imageae4d485ca5" transform="scale(1 -1)translate(0 -218)" width="218" x="26.925" xlink:href="data:image/png;base64,
+iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADXklEQVR4nO3dQY7bMBAAQSnY/3/ZuedgAdGyKYpVL6BtNAbQgPJ5HMfnAIb6M/sAsAOhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQUBoEBAaBIQGAaFBQGgQEBoEhAYBoUFAaBAQGgSEBgGhQeBn9gFm+Xw+s48wzHmes4/AP0w0CAgNAkKDgNAgIDQICA0CQoPAeRzHKxdKb96TjWQHN4aJBgGhQUBoEBAaBIQGAaFBQGgQWPo+2p1d2cx90dW5r842c0d49+y7MtEgIDQICA0CQoOA0CAgNAhMvSYz8jH1zo+ZV70i9ObfzESDgNAgIDQICA0CQoOA0CAgNAgsfU3mzXuXb1bdkx3Hvr+ZiQYBoUFAaBAQGgSEBgGhQUBoEFh6jzbTk3dZI3dVT/7cT2aiQUBoEBAaBIQGAaFBQGgQEBoE7NEWtOudrpWZaBAQGgSEBgGhQUBoEBAaBKb+bdOVqysZdx5zj77usesj+Dvf65u/MxMNAkKDgNAgIDQICA0CQoOA0CAw9ZrMyF2W16KtZ+TedDYTDQJCg4DQICA0CAgNAkKDgNAgMHWPdncvMnJXtvLOZlVv/s5NNAgIDQJCg4DQICA0CAgNAkKDwKPf63jl2x7tzTuZle26+zTRICA0CAgNAkKDgNAgIDQICA0CU++j3fXkvQm/b+Xf20SDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgsPTr5nieka+Tu/LkazQmGgSEBgGhQUBoEBAaBIQGAaFBwB6N1K5/tWWiQUBoEBAaBIQGAaFBQGgQEBoE7NH4VSPvo628ZzPRICA0CAgNAkKDgNAgIDQICA0CP7MPwFrsyf6PiQYBoUFAaBAQGgSEBgGhQcDj/Qea+ddHjGGiQUBoEBAaBIQGAaFBQGgQEBoE7NEm2HlP9uarMN+YaBAQGgSEBgGhQUBoEBAaBIQGAX/b9ECj92y77rJmMtEgIDQICA0CQoOA0CAgNAgIDQL2aBAw0SAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQICA0CQoOA0CAgNAgIDQJCg4DQICA0CAgNAkKDgNAgIDQI/AV90Fy642zSmAAAAABJRU5ErkJggg==" y="-6.64"/>
    </g>
    <g id="matplotlib.axis_1">
     <g id="xtick_1">
@@ -16584,10 +16267,10 @@ iVBORw0KGgoAAAANSUhEUgAAANoAAADaCAYAAADAHVzbAAADGUlEQVR4nO3dUUrEQBBF0Yq4/y2PvwrK
       <defs>
        <path d="M 0 0 
 L 0 3.5 
-" id="mb106234cba" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m9028a89505" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#mb106234cba" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="30.807857" xlink:href="#m9028a89505" y="224.64"/>
       </g>
      </g>
      <g id="text_1">
@@ -16623,7 +16306,7 @@ z
     <g id="xtick_2">
      <g id="line2d_2">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#mb106234cba" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="69.636429" xlink:href="#m9028a89505" y="224.64"/>
       </g>
      </g>
      <g id="text_2">
@@ -16662,7 +16345,7 @@ z
     <g id="xtick_3">
      <g id="line2d_3">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#mb106234cba" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="108.465" xlink:href="#m9028a89505" y="224.64"/>
       </g>
      </g>
      <g id="text_3">
@@ -16691,7 +16374,7 @@ z
     <g id="xtick_4">
      <g id="line2d_4">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#mb106234cba" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="147.293571" xlink:href="#m9028a89505" y="224.64"/>
       </g>
      </g>
      <g id="text_4">
@@ -16705,7 +16388,7 @@ z
     <g id="xtick_5">
      <g id="line2d_5">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#mb106234cba" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="186.122143" xlink:href="#m9028a89505" y="224.64"/>
       </g>
      </g>
      <g id="text_5">
@@ -16745,7 +16428,7 @@ z
     <g id="xtick_6">
      <g id="line2d_6">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#mb106234cba" y="224.64"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="224.950714" xlink:href="#m9028a89505" y="224.64"/>
       </g>
      </g>
      <g id="text_6">
@@ -16763,10 +16446,10 @@ z
       <defs>
        <path d="M 0 0 
 L -3.5 0 
-" id="meb9f17300f" style="stroke:#000000;stroke-width:0.8;"/>
+" id="m766957113b" style="stroke:#000000;stroke-width:0.8;"/>
       </defs>
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#meb9f17300f" y="11.082857"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m766957113b" y="11.082857"/>
       </g>
      </g>
      <g id="text_7">
@@ -16779,7 +16462,7 @@ L -3.5 0
     <g id="ytick_2">
      <g id="line2d_8">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#meb9f17300f" y="49.911429"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m766957113b" y="49.911429"/>
       </g>
      </g>
      <g id="text_8">
@@ -16792,7 +16475,7 @@ L -3.5 0
     <g id="ytick_3">
      <g id="line2d_9">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#meb9f17300f" y="88.74"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m766957113b" y="88.74"/>
       </g>
      </g>
      <g id="text_9">
@@ -16806,7 +16489,7 @@ L -3.5 0
     <g id="ytick_4">
      <g id="line2d_10">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#meb9f17300f" y="127.568571"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m766957113b" y="127.568571"/>
       </g>
      </g>
      <g id="text_10">
@@ -16820,7 +16503,7 @@ L -3.5 0
     <g id="ytick_5">
      <g id="line2d_11">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#meb9f17300f" y="166.397143"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m766957113b" y="166.397143"/>
       </g>
      </g>
      <g id="text_11">
@@ -16834,7 +16517,7 @@ L -3.5 0
     <g id="ytick_6">
      <g id="line2d_12">
       <g>
-       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#meb9f17300f" y="205.225714"/>
+       <use style="stroke:#000000;stroke-width:0.8;" x="26.925" xlink:href="#m766957113b" y="205.225714"/>
       </g>
      </g>
      <g id="text_12">
@@ -16869,7 +16552,7 @@ L 244.365 7.2
   </g>
  </g>
  <defs>
-  <clipPath id="pb9662d71c1">
+  <clipPath id="pa219f11195">
    <rect height="217.44" width="217.44" x="26.925" y="7.2"/>
   </clipPath>
  </defs>
